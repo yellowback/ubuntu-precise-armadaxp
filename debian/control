@@ -1,0 +1,146 @@
+Source: linux-armadaxp
+Section: devel
+Priority: optional
+Maintainer: Ubuntu Kernel Team <kernel-team@lists.ubuntu.com>
+Standards-Version: 3.8.4.0
+Build-Depends: debhelper (>= 5), cpio, module-init-tools, kernel-wedge (>= 2.24ubuntu1), makedumpfile [amd64 i386], device-tree-compiler [powerpc], libelf-dev, binutils-dev, rsync, libdw-dev, dpkg (>= 1.16.0~ubuntu4), util-linux
+Build-Depends-Indep: xmlto, docbook-utils, ghostscript, transfig, bzip2, sharutils, asciidoc
+Build-Conflicts: findutils (= 4.4.1-1ubuntu1)
+Vcs-Git: http://kernel.ubuntu.com/git-repos/ubuntu/ubuntu-precise.git
+
+#Package: linux-armadaxp-source-3.2.0
+#Architecture: all
+#Section: devel
+#Priority: optional
+#Provides: linux-armadaxp-source, linux-armadaxp-source-2.6
+#Depends: ${misc:Depends}, binutils, bzip2, coreutils | fileutils (>= 4.0)
+#Recommends: libc-dev, gcc, make
+#Suggests: libncurses-dev | ncurses-dev, kernel-package, libqt3-dev
+#Description: Linux kernel source for version 3.2.0 with Ubuntu patches
+# This package provides the source code for the Linux kernel version
+# 3.2.0.
+# .
+# This package is mainly meant for other packages to use, in order to build
+# custom flavours.
+# .
+# If you wish to use this package to create a custom Linux kernel, then it
+# is suggested that you investigate the package kernel-package, which has
+# been designed to ease the task of creating kernel image packages.
+# .
+# If you are simply trying to build third-party modules for your kernel,
+# you do not want this package. Install the appropriate linux-headers
+# package instead.
+
+#Package: linux-armadaxp-doc
+#Architecture: all
+#Section: doc
+#Priority: optional
+#Depends: ${misc:Depends}
+#Conflicts: linux-armadaxp-doc-2.6
+#Replaces: linux-armadaxp-doc-2.6
+#Description: Linux kernel specific documentation for version 3.2.0
+# This package provides the various documents in the 3.2.0 kernel
+# Documentation/ subdirectory.  These document kernel subsystems, APIs, device
+# drivers, and so on.  See
+# /usr/share/doc/linux-armadaxp-doc/00-INDEX for a list of what is
+# contained in each file.
+
+#Package: linux-armadaxp-tools-common
+#Architecture: all
+#Section: admin
+#Priority: optional
+#Depends: ${misc:Depends}
+#Replaces: linux-armadaxp-tools (<= 2.6.32-16.25)
+#Description: Linux kernel specific tools for version 3.2.0
+# This package provides the architecture independent parts for kernel
+# version locked tools in the 3.2.0 kernel source.
+
+Package: linux-headers-3.2.0-1610
+Architecture: armhf
+Section: devel
+Priority: optional
+Depends: ${misc:Depends}, coreutils | fileutils (>= 4.0)
+Provides: linux-armadaxp-headers, linux-armadaxp-headers-3
+Description: Header files related to Linux kernel version 3.2.0
+ This package provides kernel header files for version 3.2.0, for sites
+ that want the latest kernel headers. Please read
+ /usr/share/doc/linux-armadaxp-headers-3.2.0-1610/debian.README.gz for details
+
+Package: linux-armadaxp-libc-dev
+Architecture: armhf
+Depends: ${misc:Depends}
+Conflicts: libc6-dev (<< 2.3.2.ds1-6), libc6.1-dev (<< 2.3.2.ds1-6), dvb-dev (<< 1.0.1-6), amd64-libs-dev (<= 1.1), linux-armadaxp-kernel-headers
+Replaces: libc6-dev (<< 2.3.2.ds1-6), libc6.1-dev (<< 2.3.2.ds1-6), dvb-dev (<< 1.0.1-6), linux-armadaxp-kernel-headers, libdrm-dev
+Provides: linux-armadaxp-kernel-headers
+Multi-Arch: same
+Description: Linux Kernel Headers for development
+ This package provides headers from the Linux kernel.  These headers
+ are used by the installed headers for GNU glibc and other system
+ libraries. They are NOT meant to be used to build third-party modules for
+ your kernel. Use linux-armadaxp-headers-* packages for that.
+
+Package: linux-armadaxp-tools-3.2.0-1610
+Architecture: armhf
+Section: devel
+Priority: optional
+Depends: ${misc:Depends}, ${shlibs:Depends}, linux-tools-common
+Description: Linux kernel tools for version 3.2.0-1610
+ This package provides the architecture dependant parts for kernel
+ version locked tools for version 3.2.0-1610 on
+ DESC.
+
+
+Package: linux-image-3.2.0-1610-armadaxp
+Architecture: armhf
+Section: admin
+Priority: optional
+Pre-Depends: dpkg (>= 1.10.24)
+Provides: linux-image, linux-image-3.2, fuse-module, 
+Depends: ${misc:Depends}, ${shlibs:Depends}, initramfs-tools (>= 0.36ubuntu6), coreutils | fileutils (>= 4.0), module-init-tools (>= 3.3-pre11-4ubuntu3), crda (>= 1.1.1-1ubuntu2) | wireless-crda
+Conflicts: hotplug (<< 0.0.20040105-1)
+Recommends: flash-kernel
+Suggests: fdutils, linux-armadaxp-doc-3.2.0 | linux-armadaxp-source-3.2.0, linux-armadaxp-tools
+Description: Linux kernel image for version 3.2.0 on Marvell Armada XP based systems
+ This package contains the Linux kernel image for version 3.2.0 on
+ Marvell Armada XP based systems.
+ .
+ Also includes the corresponding System.map file, the modules built by the
+ packager, and scripts that try to ensure that the system is not left in an
+ unbootable state after an update.
+ .
+ Supports Marvell Armada XP processors.
+ .
+ Targeted towards boards
+ .
+ You likely do not want to install this package directly. Instead, install
+ the linux-armadaxp meta-package, which will ensure that upgrades work
+ correctly, and that supporting packages are also installed.
+
+Package: linux-headers-3.2.0-1610-armadaxp
+Architecture: armhf
+Section: devel
+Priority: optional
+Depends: ${misc:Depends}, coreutils | fileutils (>= 4.0), linux-headers-3.2.0-1610, ${shlibs:Depends}
+Provides: linux-armadaxp-headers, linux-armadaxp-headers-3.2
+Description: Linux kernel headers for version 3.2.0 on Marvell Armada XP based systems
+ This package provides kernel header files for version 3.2.0 on
+ Marvell Armada XP based systems.
+ .
+ This is for sites that want the latest kernel headers.  Please read
+ /usr/share/doc/linux-armadaxp-headers-3.2.0-1610/debian.README.gz for details.
+
+Package: linux-image-3.2.0-1610-armadaxp-dbgsym
+Architecture: armhf
+Section: devel
+Priority: optional
+Depends: ${misc:Depends}
+Provides: linux-debug
+Description: Linux kernel debug image for version 3.2.0 on Marvell Armada XP based systems
+ This package provides a kernel debug image for version 3.2.0 on
+ Marvell Armada XP based systems.
+ .
+ This is for sites that wish to debug the kernel.
+ .
+ The kernel image contained in this package is NOT meant to boot from. It
+ is uncompressed, and unstripped. This package also includes the
+ unstripped modules.

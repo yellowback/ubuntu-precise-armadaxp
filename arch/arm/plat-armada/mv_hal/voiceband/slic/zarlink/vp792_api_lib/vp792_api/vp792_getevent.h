@@ -1,0 +1,190 @@
+/*
+ * Copyright (c) 2010, Zarlink Semiconductor, Inc.
+ *
+ * $Revision: 5577 $
+ * $LastChangedDate: 2009-09-16 15:35:58 -0500 (Wed, 16 Sep 2009) $
+ */
+
+#ifndef VP792_GETEVENT_H
+#define VP792_GETEVENT_H
+
+/* Fields in the event ID word: */
+typedef enum {
+    VP792_INTIND_SYS_MASK           = 0x8000,
+    VP792_INTIND_SLACID_MASK        = 0x7000,
+    VP792_INTIND_SLACID_POS         = 12,
+
+    /* Fields in the event ID word when VP792_INTIND_SYS_MASK bit is 1: */
+    VP792_INTIND_SYSINT_FLAGS_MASK  = 0x0FFF,
+    VP792_INTIND_SYSINT_FLAGS_WIDTH = 12,
+    VP792_INTIND_SYSINT_RESET_MASK  = 0x0001,
+    VP792_INTIND_SYSINT_PREB_MASK   = 0x0002,
+    VP792_INTIND_SYSINT_HBF_MASK    = 0x0010,
+    VP792_INTIND_SYSINT_LBF_MASK    = 0x0020,
+    VP792_INTIND_SYSINT_PBF_MASK    = 0x0040,
+    VP792_INTIND_SYSINT_CFAIL_MASK  = 0x0200,
+    VP792_INTIND_SYSINT_WDT_MASK    = 0x0400,
+    VP792_INTIND_SYSINT_OVL_MASK    = 0x0800,
+
+    /* Fields in the event ID word when VP792_INTIND_SYS_MASK bit is 0: */
+    VP792_INTIND_FW_CHANID_MASK     = 0x0E00,
+    VP792_INTIND_FW_CHANID_POS      = 9,
+    VP792_INTIND_FW_EVID_MASK       = 0x003E,
+    VP792_INTIND_FW_EVID_POS        = 1,
+    VP792_INTIND_FW_ACTIVE_MASK     = 0x0001,
+    VP792_INTIND_ENUM_SIZE = FORCE_STANDARD_C_ENUM_SIZE
+} Vp792EventIdFields;
+
+/* Values for the VP792_INTIND_FW_EVID_MASK field in the event ID word: */
+typedef enum {
+    VP792_EVID_NO_EVENT         = 0x00,
+    VP792_EVID_BOOT_CMP         = (0x01 << VP792_INTIND_FW_EVID_POS),
+    VP792_EVID_MB_CMD           = (0x02 << VP792_INTIND_FW_EVID_POS),
+    VP792_EVID_MB_RSP           = (0x03 << VP792_INTIND_FW_EVID_POS),
+    VP792_EVID_MB_ERR           = (0x04 << VP792_INTIND_FW_EVID_POS),
+    VP792_EVID_TIMER_CMP        = (0x05 << VP792_INTIND_FW_EVID_POS),
+    VP792_EVID_TS_ROLLOVER      = (0x06 << VP792_INTIND_FW_EVID_POS),
+
+    /* Global events are consecutive above.  Remaining events are channel-specific. */
+    VP792_FIRST_GLOBAL_EVID     = VP792_EVID_BOOT_CMP,
+    VP792_LAST_GLOBAL_EVID      = VP792_EVID_TS_ROLLOVER,
+
+    VP792_EVID_CAL_CMP          = (0x07 << VP792_INTIND_FW_EVID_POS), /* sometimes global */
+    VP792_EVID_RESERVED08       = (0x08 << VP792_INTIND_FW_EVID_POS),
+    VP792_EVID_RESERVED09       = (0x09 << VP792_INTIND_FW_EVID_POS),
+    VP792_EVID_RESET_CMP        = (0x0A << VP792_INTIND_FW_EVID_POS),
+    VP792_EVID_PCM_DATAFRAME    = (0x0B << VP792_INTIND_FW_EVID_POS),
+    VP792_EVID_USER             = (0x0C << VP792_INTIND_FW_EVID_POS),
+    VP792_EVID_FSK              = (0x0D << VP792_INTIND_FW_EVID_POS),
+    VP792_EVID_AC_FLT           = (0x0E << VP792_INTIND_FW_EVID_POS),
+    VP792_EVID_DC_FLT           = (0x0F << VP792_INTIND_FW_EVID_POS),
+    VP792_EVID_T_FLT            = (0x10 << VP792_INTIND_FW_EVID_POS),
+    VP792_EVID_HOOK             = (0x11 << VP792_INTIND_FW_EVID_POS),
+    VP792_EVID_RAW_HOOK         = (0x12 << VP792_INTIND_FW_EVID_POS),
+    VP792_EVID_GKEY             = (0x13 << VP792_INTIND_FW_EVID_POS),
+    VP792_EVID_RING_CAD         = (0x14 << VP792_INTIND_FW_EVID_POS),
+    VP792_EVID_DDIGIT           = (0x15 << VP792_INTIND_FW_EVID_POS),
+    VP792_EVID_PDIGIT           = (0x16 << VP792_INTIND_FW_EVID_POS),
+    VP792_EVID_TONE             = (0x17 << VP792_INTIND_FW_EVID_POS),
+    VP792_EVID_SEQ              = (0x18 << VP792_INTIND_FW_EVID_POS),
+    VP792_EVID_PREQ_HOOK        = (0x19 << VP792_INTIND_FW_EVID_POS),
+    VP792_EVID_MTR_CAD          = (0x1A << VP792_INTIND_FW_EVID_POS),
+    VP792_EVID_MTR_CMP          = (0x1B << VP792_INTIND_FW_EVID_POS),
+    VP792_EVID_FLASH            = (0x1C << VP792_INTIND_FW_EVID_POS),
+    VP792_EVID_MTR_ROLLOVER     = (0x1D << VP792_INTIND_FW_EVID_POS),
+    VP792_EVID_ENUM_SIZE = FORCE_STANDARD_C_ENUM_SIZE
+} Vp792EventId;
+
+/* Defines for decoding digit event data */
+#define VP792_DIGIT_TS_MASK     0xFFF0
+#define VP792_DIGIT_MASK        0x000F
+
+/* Defines for sequencer event codes */
+#define VP792_SEQEVENT_CMP      0x00
+#define VP792_SEQEVENT_PAUSED   0x01
+#define VP792_SEQEVENT_BAD_INST 0x81
+#define VP792_SEQEVENT_BAD_BR   0x82
+
+/* Defines for FSK event parameter */
+#define VP792_FSKEVENT_FSK_CMP      0x00
+#define VP792_FSKEVENT_BUF1_EMPTY   0x01
+#define VP792_FSKEVENT_BUF2_EMPTY   0x02
+
+/* Values for the event parameter byte for VP792_EVID_USER: */
+typedef enum {
+
+    /* These event IDs are reserved for end-user applications.  They
+       can use Profile Wizard to add user events to their sequences,
+       which will be reported by the API as a VP_LINE_EVID_USER event. */
+    VP792_UEVID_USER_START      = 0x0000,
+    VP792_UEVID_USER_0          = 0x0000,
+    VP792_UEVID_USER_1          = 0x0001,
+    VP792_UEVID_USER_2          = 0x0002,
+    VP792_UEVID_USER_3          = 0x0003,
+    VP792_UEVID_USER_4          = 0x0004,
+    VP792_UEVID_USER_5          = 0x0005,
+    VP792_UEVID_USER_6          = 0x0006,
+    VP792_UEVID_USER_7          = 0x0007,
+    VP792_UEVID_USER_END        = 0x0007,
+
+    /* The following event IDs are generated by sequences that are created
+       internally by the API.  Their values are unimportant, as long as
+       they fall in the range 0x00 to 0x3F (allowed in the sequencer). */
+    VP792_UEVID_MSG_WAIT_ON,
+    VP792_UEVID_MSG_WAIT_OFF,
+
+    /* The following event IDs must not change; they can appear in cadence
+     * profiles generated by Profile Wizard: */
+    VP792_UEVID_TONE_CAD        = 0x0021,
+    VP792_UEVID_START_CID_SEQ   = 0x0022,
+                                /* ... */
+    VP792_UEVID_RX_DISABLE      = 0x0026,
+    VP792_UEVID_RX_RESTORE      = 0x0027,
+                                /* ... */
+    VP792_UEVID_HOOK_MASK       = 0x002F,
+    VP792_UEVID_ACK_DETECT_0    = 0x0030,
+    VP792_UEVID_ACK_DETECT_1    = 0x0031,
+    VP792_UEVID_ACK_DETECT_1_0  = 0x0032,
+    VP792_UEVID_ACK_DETECT_2    = 0x0033,
+    VP792_UEVID_ACK_DETECT_2_0  = 0x0034,
+    VP792_UEVID_ACK_DETECT_2_1  = 0x0035,
+    VP792_UEVID_ACK_DETECT_3    = 0x0036,
+    VP792_UEVID_ACK_DETECT_3_0  = 0x0037,
+    VP792_UEVID_ACK_DETECT_3_1  = 0x0038,
+    VP792_UEVID_ACK_DETECT_3_2  = 0x0039,
+    VP792_UEVID_VOICE_EN        = 0x003A,
+    VP792_UEVID_VOICE_DIS       = 0x003B,
+    VP792_UEVID_DTMF_DATA       = 0x003C,
+    VP792_UEVID_CID_TONE_1      = 0X003D,
+    VP792_UEVID_CID_TONE_2      = 0X003E,
+    VP792_UEVID_CID_TONE_3      = 0X003F,
+
+    /* 0x0040 - 0x00FF reserved for 792 firmware use */
+
+    /* User event IDs generated by the sequencer are limited to the lowest 6
+       bits, so use an upper range for user events generated by the USER_CTL
+       mailbox command. */
+    VP792_UEVID_PATCH_READY     = 0x0100,
+    VP792_UEVID_SEQUENCER_READY,
+    VP792_UEVID_IO_WRITE_CMP,
+    VP792_UEVID_IO_READ_CMP,
+    VP792_UEVID_CAL_BUSY,
+    VP792_UEVID_DTMF_ENABLE,
+    VP792_UEVID_DTMF_DISABLE,
+    VP792_UEVID_MTR_ABORT,
+    VP792_UEVID_CID_DATA_TX_DONE,
+    VP792_UEVID_LLCMD_TX_CMP,
+    VP792_UEVID_TST_PRIMITIVE_CMP,
+
+    /* For outstanding artificial response events (for example, LINE_IO_RD_CMP): */
+    VP792_UEVID_RESPONSE_FIRST,
+    VP792_UEVID_RESPONSE_LAST   = VP792_UEVID_RESPONSE_FIRST + VP792_MAX_OUTSTANDING_RESPONSES,
+
+    VP792_UEVID_ENUM_SIZE = FORCE_STANDARD_C_ENUM_SIZE
+} Vp792UserEventId;
+
+/* Event handler functions enumeration: */
+typedef enum {
+    VP792_EH_NONE            = 0x0000,
+    VP792_EH_INIT_DEVICE     = 0x0001,
+    VP792_EH_INIT_LINE       = 0x0002,
+    VP792_EH_CAL_CODEC       = 0x0004,
+    VP792_EH_CAL_LINE        = 0x0008,
+    VP792_EH_SET_LINE_STATE  = 0x0010,
+    VP792_EH_SET_LINE_TONE   = 0x0020,
+    VP792_EH_SEND_CID        = 0x0080,
+    VP792_EH_SEND_SIGNAL     = 0x0100,
+    VP792_EH_RD_OPTION       = 0x0400,
+    VP792_EH_SEQ_ABORT       = 0x0800,
+    VP792_EH_TEST_LINE       = 0x1000,
+
+    /* Event handlers that wait for the sequencer to abort: */
+    VP792_EH_SEQ_STOP_MASK   = (VP792_EH_SET_LINE_STATE |
+                                VP792_EH_SET_LINE_TONE |
+                                VP792_EH_SEND_CID |
+                                VP792_EH_SEND_SIGNAL),
+
+    VP792_SM_ENUM_SIZE = FORCE_STANDARD_C_ENUM_SIZE
+} Vp792EventHandlerType;
+
+#endif /* VP792_GETEVENT_H */
