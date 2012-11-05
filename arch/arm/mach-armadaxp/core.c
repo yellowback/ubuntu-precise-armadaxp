@@ -766,10 +766,14 @@ static struct platform_device mv_ipc_net = {
 };
 #endif
 
-
 /*******
  * RTC *
  *******/
+#ifdef CONFIG_MACH_OPENBLOCKS
+static struct i2c_board_info __initdata db78260bp_obs_i2c_rtc = {
+       I2C_BOARD_INFO("s35390a", 0x30),
+};
+#else
 static struct resource axp_rtc_resource[] = {
 	{
 		.start	= INTER_REGS_PHYS_BASE + MV_RTC_REGS_OFFSET,
@@ -785,6 +789,7 @@ static void __init rtc_init(void)
 {
 	platform_device_register_simple("rtc-mv", -1, axp_rtc_resource, 2);
 }
+#endif
 
 /********
  * SATA *
@@ -1454,9 +1459,11 @@ static void __init axp_db_init(void)
 
 	mv_gpio_init();
 
+#ifndef CONFIG_MACH_OPENBLOCKS
 	/* RTC */
 	if(mvUnitMapIsMine(RTC) == MV_TRUE)
 		rtc_init();
+#endif
 
 	/* SPI */
 	if(mvUnitMapIsMine(SPI) == MV_TRUE)
@@ -1495,6 +1502,13 @@ static void __init axp_db_init(void)
       if ((lcd0_enable == 1) && (lcd_panel == 0 ) && (mvUnitMapIsMine(I2C1) == MV_TRUE))
         platform_device_register(&axp_i2c1);
 #endif
+
+#ifdef CONFIG_MACH_OPENBLOCKS
+	/* RTC */
+	platform_device_register(&axp_i2c1);
+	i2c_register_board_info(1, &db78260bp_obs_i2c_rtc, 1);
+#endif
+
 	/* SDIO */
 #if defined(CONFIG_MV_INCLUDE_SDIO)
 	if(mvUnitMapIsMine(SDIO) == MV_TRUE)
@@ -1625,8 +1639,10 @@ static void __init axp_rd_nas_init(void)
 
 	mv_gpio_init();
 
+#ifndef CONFIG_MACH_OPENBLOCKS
 	/* RTC */
 	rtc_init();
+#endif
 
 	/* SPI */
 	mvSysSpiInit(0, _16M);
@@ -1660,7 +1676,10 @@ static void __init axp_rd_nas_init(void)
         platform_device_register(&axp_i2c1);
 #endif
 
-
+#ifdef CONFIG_MACH_OPENBLOCKS
+	platform_device_register(&axp_i2c1);
+	i2c_register_board_info(1, &db78260bp_obs_i2c_rtc, 1);
+#endif
 
 
 #if defined(CONFIG_MV_INCLUDE_SDIO)
@@ -1763,8 +1782,10 @@ static void __init axp_rdsrv_init(void)
 
 	mv_gpio_init();
 
+#ifndef CONFIG_MACH_OPENBLOCKS
 	/* RTC */
 	rtc_init();
+#endif
 
 	/* SPI */
 	mvSysSpiInit(0, _16M);
@@ -1878,8 +1899,10 @@ static void __init axp_fpga_init(void)
 
 	mv_gpio_init();
 
+#ifndef CONFIG_MACH_OPENBLOCKS
 	/* RTC */
 	rtc_init();
+#endif
 
 	return;
 }

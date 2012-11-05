@@ -66,6 +66,11 @@ config MACH_ARMADA_XP_FPGA
 	default y
 	help
 
+config MACH_OPENBLOCKS
+	bool "Marvell Armada XP OpenBlockS Board"
+	default n
+	help
+
 config CFU_DRAM_BYPASS
         bool "Bypass CFU to DRAM via Punit"
 	default n
